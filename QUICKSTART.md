@@ -5,6 +5,7 @@ Get your Google Tasks MCP server running in 5 minutes!
 ## 📋 What You'll Get
 
 A powerful MCP server that lets Claude (or any LLM) manage your Google Tasks:
+
 - Create, update, delete tasks and task lists
 - Natural language task creation ("Buy milk tomorrow")
 - Bulk operations and smart search
@@ -29,7 +30,17 @@ A powerful MCP server that lets Claude (or any LLM) manage your Google Tasks:
    - Click CREATE
 8. **DOWNLOAD JSON** → Save the file
 
-### Step 2: Install & Configure (1 minute)
+### Step 2: Create Python Environment (1 minute)
+
+```bash
+# Create a virtual environment (recommended)
+python3 -m venv venv
+
+source venv/bin/activate
+
+```
+
+### Step 3: Install & Configure (1 minute)
 
 ```bash
 # Install dependencies
@@ -70,8 +81,8 @@ Add to your Claude config file:
 {
   "mcpServers": {
     "google-tasks": {
-      "command": "python",
-      "args": ["/full/path/to/google_tasks_mcp.py"]
+      "command": "/Users/omshejul/Desktop/files/venv/bin/python",
+      "args": ["/Users/omshejul/Desktop/files/google_tasks_mcp.py"]
     }
   }
 }
@@ -96,16 +107,19 @@ Once connected, try these in Claude:
 ## 🔍 Troubleshooting
 
 ### "Authentication failed"
+
 - Check credentials.json exists in `~/.google_tasks_mcp/`
 - Ensure Tasks API is enabled in Google Cloud Console
 - Delete `~/.google_tasks_mcp/token.json` and re-authenticate
 
 ### "No module named 'fastmcp'"
+
 ```bash
 pip install fastmcp google-auth google-auth-oauthlib google-api-python-client
 ```
 
 ### "Server not responding in Claude"
+
 - Check the path in claude_desktop_config.json is absolute
 - Restart Claude Desktop
 - Test server works: `python google_tasks_mcp.py`
@@ -113,6 +127,7 @@ pip install fastmcp google-auth google-auth-oauthlib google-api-python-client
 ## 📚 Available Tools
 
 ### Essential Tools
+
 - `create_task` - Add a new task
 - `list_tasks` - View your tasks
 - `update_task` - Modify task details
@@ -120,12 +135,14 @@ pip install fastmcp google-auth google-auth-oauthlib google-api-python-client
 - `search_tasks` - Find tasks across all lists
 
 ### Workflow Tools
+
 - `quick_add_task` - Natural language task creation
 - `bulk_create_tasks` - Create multiple tasks at once
 - `get_task_summary` - View tasks by time range
 - `clear_completed_tasks` - Bulk remove completed tasks
 
 ### List Management
+
 - `create_task_list` - New task list
 - `list_task_lists` - View all lists
 - `update_task_list` - Rename a list
@@ -136,11 +153,13 @@ pip install fastmcp google-auth google-auth-oauthlib google-api-python-client
 1. **Natural Language**: Use `quick_add_task` with phrases like "Meeting tomorrow at 3pm"
 
 2. **Bulk Operations**: Create project tasks all at once:
+
    ```
    Bulk create: "Design mockup, Get feedback, Implement changes, Test, Deploy"
    ```
 
 3. **Smart Filtering**: List tasks with specific criteria:
+
    ```
    "Show tasks due this week but not completed"
    ```

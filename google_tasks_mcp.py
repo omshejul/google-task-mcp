@@ -626,8 +626,7 @@ async def update_task_list(input: UpdateTaskListInput) -> str:
     ⚠️ WARNING: This will permanently delete the task list and all tasks within it.
     This action cannot be undone.
     
-    Returns: Confirmation of deletion.""",
-    destructiveHint=True
+    Returns: Confirmation of deletion."""
 )
 async def delete_task_list(input: DeleteTaskListInput) -> str:
     """Delete a task list"""
@@ -755,8 +754,7 @@ async def update_task(input: UpdateTaskInput) -> str:
     
     ⚠️ WARNING: This permanently removes the task. This action cannot be undone.
     
-    Returns: Confirmation of deletion.""",
-    destructiveHint=True
+    Returns: Confirmation of deletion."""
 )
 async def delete_task(input: DeleteTaskInput) -> str:
     """Delete a task"""
@@ -797,8 +795,7 @@ async def move_task(input: MoveTaskInput) -> str:
     
     ⚠️ WARNING: This permanently removes ALL completed tasks from the list.
     
-    Returns: Confirmation of cleared tasks.""",
-    destructiveHint=True
+    Returns: Confirmation of cleared tasks."""
 )
 async def clear_completed_tasks(input: ClearCompletedTasksInput) -> str:
     """Clear all completed tasks from a list"""
