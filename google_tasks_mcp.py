@@ -1096,10 +1096,25 @@ Once complete, run this server again.
         run_sse = getattr(mcp, "run_sse_async", None)
         run_stdio_async = getattr(mcp, "run_stdio_async", None)
 
+        auth_token = os.getenv("MCP_AUTH_TOKEN")
+
         if run_stream_http:
-            asyncio.run(run_stream_http(host=host, port=port, path=path))
+            try:
+                if auth_token:
+                    asyncio.run(run_stream_http(host=host, port=port, path=path, auth_token=auth_token))
+                else:
+                    asyncio.run(run_stream_http(host=host, port=port, path=path))
+            except TypeError:
+                # Older signatures without auth_token
+                asyncio.run(run_stream_http(host=host, port=port, path=path))
         elif run_sse:
-            asyncio.run(run_sse(host=host, port=port, path=path))
+            try:
+                if auth_token:
+                    asyncio.run(run_sse(host=host, port=port, path=path, auth_token=auth_token))
+                else:
+                    asyncio.run(run_sse(host=host, port=port, path=path))
+            except TypeError:
+                asyncio.run(run_sse(host=host, port=port, path=path))
         else:
             print(
                 "Remote mode requested but this FastMCP version exposes only stdio runners. "
