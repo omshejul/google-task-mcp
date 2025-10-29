@@ -127,7 +127,7 @@ This server can also run remotely over HTTP/SSE. Control it with environment var
 Example:
 
 ```bash
-source /Users/omshejul/python-env/venv/bin/python  
+source /Users/omshejul/python-env/venv/bin/python
 
 export MCP_MODE=remote
 export MCP_HOST=0.0.0.0
@@ -138,22 +138,55 @@ python google_tasks_mcp.py
 
 #### Claude Remote Config (SSE)
 
-Add an entry like this to the `mcpServers` section of your Claude config:
+Claude Desktop typically expects stdio servers. Use the `mcp-remote` adapter to connect via SSE. Add an entry like this to the `mcpServers` section of your Claude config:
 
 ```json
 {
   "mcpServers": {
     "google-tasks": {
-      "transport": {
-        "type": "sse",
-        "url": "http://YOUR_HOST:8000/sse"
-      }
+      "command": "npx",
+      "args": ["-y", "mcp-remote@latest", "http://YOUR_HOST:8000/sse"]
     }
   }
 }
 ```
 
 Replace `YOUR_HOST` and port as needed. Ensure the server is reachable from the client.
+
+#### Optional: Require a Bearer Token
+
+Set an auth token for the remote server so clients must present `Authorization: Bearer <token>`:
+
+```bash
+export MCP_AUTH_TOKEN=REPLACE_ME_SECRET
+export MCP_MODE=remote
+export MCP_HOST=0.0.0.0
+export MCP_PORT=8000
+export MCP_PATH=/sse
+/Users/omshejul/python-env/venv/bin/python google_tasks_mcp.py
+```
+
+For Claude with `mcp-remote`, pass the header and keep the secret in an env var:
+
+```json
+{
+  "mcpServers": {
+    "google-tasks": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-remote@latest",
+        "http://YOUR_HOST:8000/sse",
+        "--header",
+        "Authorization:Bearer ${GOOGLE_TASKS_MCP_TOKEN}"
+      ],
+      "env": {
+        "GOOGLE_TASKS_MCP_TOKEN": "REPLACE_ME_SECRET"
+      }
+    }
+  }
+}
+```
 
 ## Available Tools
 
