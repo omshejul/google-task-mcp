@@ -1079,4 +1079,33 @@ Once complete, run this server again.
         sys.exit(1)
     
     # Start the server
-    mcp.run()
+    # Support both stdio (local) and HTTP/SSE (remote) modes via env vars
+    mode = os.getenv("MCP_MODE", "stdio").lower()
+    if mode in {"remote", "http", "sse"}:
+        host = os.getenv("MCP_HOST", "0.0.0.0")
+        port_str = os.getenv("MCP_PORT", "8000")
+        path = os.getenv("MCP_PATH", "/sse")
+        try:
+            port = int(port_str)
+        except ValueError:
+            print(f"Invalid MCP_PORT '{port_str}', defaulting to 8000", file=sys.stderr)
+            port = 8000
+
+        # Prefer async HTTP/SSE runners present in newer FastMCP versions
+        run_stream_http = getattr(mcp, "run_streamable_http_async", None)
+        run_sse = getattr(mcp, "run_sse_async", None)
+        run_stdio_async = getattr(mcp, "run_stdio_async", None)
+
+        if run_stream_http:
+            asyncio.run(run_stream_http(host=host, port=port, path=path))
+        elif run_sse:
+            asyncio.run(run_sse(host=host, port=port, path=path))
+        else:
+            print(
+                "Remote mode requested but this FastMCP version exposes only stdio runners. "
+                "Available methods: run, run_async, run_stdio_async. Set MCP_MODE=stdio or upgrade 'fastmcp'.",
+                file=sys.stderr,
+            )
+            sys.exit(2)
+    else:
+        mcp.run()
